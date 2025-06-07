@@ -1,14 +1,4 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>noah p. pymopi </title>
-  
-
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -275,6 +265,8 @@
       <li onclick="startChapterTransition('noah-chapter1')">To whoever this may concern,</li>
       <li onclick="window.open('https://drive.google.com/file/d/1o_VrQuBZ6fGZo3xds4XQTeW_Gj1cYzf2/view?usp=sharing', '_blank')">
         Dan and I
+         <li onclick="window.open('https://drive.google.com/file/d/1UBiE1LwUg556iXPBz3C1W_Tui7ADQ1fR/view?usp=sharing', '_blank')">
+        Voicemail
       </li>
     </ul>
 
@@ -282,8 +274,18 @@
       <li onclick="startChapterTransition('dan-chapter1')">Dan's Chapter 1</li>
       <li onclick="window.open('https://open.spotify.com/album/5pIk2GnIZPaxqsIavh6ibR?si=Bz1K1k3jTrCmj9tuboFlWw', '_blank')">
         My Story
+         <li onclick="window.open('https://youtu.be/YQoIx4-B4Wc', '_blank')">
+        The Void
+             <li onclick="window.open('https://cryptii.com/pipes/vigenere-cipher', '_blank')">
+        Decoder
       </li>
     </ul>
+    
+    <ul id="jayson-files" style="display:none;">
+  <li onclick="startChapter('jayson-chapter2')">Memory Fragment – Mom and Dad Arguing</li>
+  <li onclick="startChapter('jayson-chapter3')">Letter to my friend, Dan</li>
+</ul>
+
 
     <div style="flex-grow: 1;"></div>
     <button id="logout-button" onclick="goBackToLogin()" style="align-self: center; margin-top: 10px;">Logout</button>
@@ -297,7 +299,23 @@
   <div class="chapter" id="dan-chapter1">
     <p></p>
     <button class="continue-button" onclick="nextLine()">Continue</button>
+    
   </div>
+  <div class="chapter" id="jayson-chapter1">
+  <p class="typewriter">[Recording] “Day 26. I dreamed of DAN again. He was in the static. I saw myself—but broken.”</p>
+  <button class="continue-button" onclick="alert('To be continued...')">Continue</button>
+</div>
+
+<div class="chapter" id="jayson-chapter2">
+  <p class="typewriter">“The sky was pink. The trees were purple. I stood on the farm, but I wasn’t really there…”</p>
+  <button class="continue-button" onclick="alert('To be continued...')">Continue</button>
+</div>
+
+<div class="chapter" id="jayson-chapter3">
+  <p class="typewriter">“DAN, if you’re hearing this—I’m sorry. I should’ve answered the screen. I should’ve…”</p>
+  <button class="continue-button" onclick="alert('To be continued...')">Continue</button>
+</div>
+
 
   <script>
     const noahLines = [
@@ -324,44 +342,58 @@
     ];
 
     const danLines = [
-      "Hey, it’s Dan here.",
+      "Hey, it’s Dan.",
       "Sorry for going absent on the social media.",
-      "Payla, sorry.",
+      "Payla, I'm sorry, I know you were worried about me.",
+      "As for you others, I'm okay, I guess.",
       "I'm still here, in this place.",
-      "Anyways, I hope you find what you’re looking for in here.",
+      "Anyways, I hope you find what you’re looking for in here. Maybe it can help me get out.",
       "Good luck."
     ];
 
     let currentLines = [];
     let currentIndex = 0;
 
-    function checkLogin() {
-      const user = document.getElementById('username').value.toLowerCase().trim();
-      const pass = document.getElementById('password').value.trim();
+   function checkLogin() {
+  const user = document.getElementById('username').value.toLowerCase().trim();
+  const pass = document.getElementById('password').value.trim();
 
-      if (user === 'noah.p.pymopi' && pass === 'HYPNOPOMPIA') {
-        alert('Access granted. Welcome Noah.');
-        document.getElementById('login-screen').style.display = 'none';
-        document.querySelector('.post-it').style.display = 'none';
-        document.getElementById('file-list').style.display = 'flex';
-        document.getElementById('noah-files').style.display = 'block';
-        document.getElementById('dan-files').style.display = 'none';
-        clearChapter();
-      } else if (user === 'anagramshiddenterms' && pass === 'dreamsandnightmares') {
-        alert('Access granted. Welcome Dan.');
-        document.getElementById('login-screen').style.display = 'none';
-        document.querySelector('.post-it').style.display = 'none';
-        document.getElementById('file-list').style.display = 'flex';
-        document.getElementById('dan-files').style.display = 'block';
-        document.getElementById('noah-files').style.display = 'none';
-        clearChapter();
-      } else {
-        const err = document.getElementById('error-msg');
-        err.textContent = 'Incorrect username or password.';
-        err.classList.add('error-animate');
-        setTimeout(() => err.classList.remove('error-animate'), 1500);
-      }
-    }
+  if (user === 'noah.p.pymopi' && pass === 'HYPNOPOMPIA') {
+    alert('Access granted. Welcome Noah.');
+    document.getElementById('login-screen').style.display = 'none';
+    document.querySelector('.post-it').style.display = 'none';
+    document.getElementById('file-list').style.display = 'flex';
+    document.getElementById('noah-files').style.display = 'block';
+    document.getElementById('jayson-files').style.display = 'none';
+    document.getElementById('dan-files').style.display = 'none';
+    clearChapter();
+  } else if (user === 'anagramshiddenterms' && pass === 'dreamsandnightmares') {
+    alert('Access granted. Welcome Dan.');
+    document.getElementById('login-screen').style.display = 'none';
+    document.querySelector('.post-it').style.display = 'none';
+    document.getElementById('file-list').style.display = 'flex';
+    document.getElementById('dan-files').style.display = 'block';
+    document.getElementById('jayson-files').style.display = 'none';
+    document.getElementById('noah-files').style.display = 'none';
+    clearChapter();
+  } else if (user === 'jayson.j.gallardo' && pass === 'ABrokenMind') {
+    alert('Access granted. Welcome Jayson.');
+    document.getElementById('login-screen').style.display = 'none';
+    document.querySelector('.post-it').style.display = 'none';
+    document.getElementById('file-list').style.display = 'flex';
+    // You can customize a new section like "jayson-files" here:
+    document.getElementById('noah-files').style.display = 'none';
+    document.getElementById('jayson-files').style.display = 'block';
+    document.getElementById('dan-files').style.display = 'none';
+    clearChapter();
+    // Add more behavior if needed
+  } else {
+    const err = document.getElementById('error-msg');
+    err.textContent = 'Incorrect username or password.';
+    err.classList.add('error-animate');
+    setTimeout(() => err.classList.remove('error-animate'), 1500);
+  }
+}
 
     function clearChapter() {
       document.querySelectorAll('.chapter').forEach(c => {
