@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>noah p. pymopi </title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TV Glitch with Static Noise & ARG Login</title>
+  <style>
+    body {
+      background: black;
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      padding-top: 40px;
+      position: relative;
+    }
+
+    .post-it {
+      position: absolute;
+      top: 50px;
+      right: calc(50% - 300px + 10px);
+      width: 220px;
+      padding: 15px;
+      background: #fffb7d;
+      box-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+      border: 1.5px solid #f1e739;
+      font-size: 0.9em;
+      color: #333;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      user-select: none;
+      border-radius: 8px;
+      transform: rotate(-5deg);
+      z-index: 10;
+    }
+
+    .tv-screen, #login-screen {
+      width: 600px;
+      height: 400px;
+      border-radius: 16px;
+      box-shadow: 0 0 30px #0ff;
+      overflow: hidden;
+      position: relative;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 40px;
+    }
+
+    .tv-screen {
+      background: url('your-tv-image.jpg') no-repeat center/cover;
+      position: relative;
+    }
+
+    .static-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') center center / cover no-repeat;
+      opacity: 1;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      animation: flicker 0.15s infinite;
+      z-index: 2;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.5; }
+    }
+
+    @keyframes screenZoom {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(10); opacity: 0; }
+    }
+
+    .zoom-effect {
+      animation: screenZoom 1.5s ease forwards;
+      z-index: 20;
+    }
+
+    #login-screen {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
+      border: 2px solid #0f0;
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.9);
+      z-index: 5;
+      border-radius: 16px;
+      width: 600px;
+      height: 400px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    input {
+      background: black;
+      color: #0f0;
+      border: 1px solid #0f0;
+      font-size: 1.2em;
+      padding: 0.5em;
+      margin: 0.5em 0;
+      width: 80%;
+      border-radius: 4px;
+    }
+
+    button {
+      background: #0f0;
+      color: black;
+      font-weight: bold;
+      padding: 0.5em 1em;
+      border: none;
+      cursor: pointer;
+      width: 50%;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+
+    #error-msg {
+      color: red;
+      margin-top: 10px;
+      height: 1.2em;
+      font-weight: bold;
+    }
+
+    @keyframes glowError {
+      0%   { text-shadow: 0 0 5px red; }
+      50%  { text-shadow: 0 0 20px red; }
+      100% { text-shadow: 0 0 5px red; }
+    }
+
+    @keyframes shakeError {
+      0%   { transform: translateX(0); }
+      25%  { transform: translateX(-5px); }
+      50%  { transform: translateX(5px); }
+      75%  { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    #error-msg.error-animate {
+      animation: glowError 1s ease-in-out, shakeError 0.4s ease-in-out;
+    }
+
+    #file-list {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: rgba(0,0,0,0.95);
+      border-radius: 16px;
+      box-shadow: 0 0 30px #0ff;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      color: #0f0;
+      font-family: monospace;
+      z-index: 5;
+    }
+
+    #file-list h3 {
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    #file-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #file-list ul li {
+      padding: 8px 0;
+      border-bottom: 1px solid #0f0;
+      cursor: pointer;
+    }
+
+    #file-list ul li:hover {
+      background-color: #0f0;
+      color: black;
+    }
+
+    .chapter {
+      display: none;
+      background: rgba(0, 0, 0, 0.95);
+      color: #0f0;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: monospace;
+      position: relative;
+      white-space: pre-wrap;
+    }
+
+    .continue-button {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      background: #0f0;
+      color: black;
+      font-weight: bold;
+      padding: 0.5em 1em;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      z-index: 100;
+    }
+
+    .typewriter {
+      display: inline-block;
+      border-right: 2px solid #0f0;
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typing 3s steps(40, end), blink 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+  </style>
+</head>
+<body>
+  <div class="post-it">
+    Social media drains us... <br><strong>@noah.p.pymopi</strong> you'll find your log in there... <em></em>Good luck.
+  </div>
+
+  <div class="tv-screen" id="glitch-screen">
+    <div class="static-overlay"></div>
+  </div>
+
+  <div id="login-screen">
+    <h2>Access Terminal</h2>
+    <input type="text" id="username" placeholder="Username" autocomplete="off" />
+    <input type="password" id="password" placeholder="Password" autocomplete="off" />
+    <button onclick="checkLogin()">Login</button>
+    <div id="error-msg"></div>
+  </div>
+
+  <div id="file-list">
+    <h3>FILES</h3>
+
+    <ul id="noah-files" style="display:none;">
+      <li onclick="startChapterTransition('noah-chapter1')">To whoever this may concern,</li>
+      <li onclick="window.open('https://drive.google.com/file/d/1o_VrQuBZ6fGZo3xds4XQTeW_Gj1cYzf2/view?usp=sharing', '_blank')">
+        Dan and I
+      </li>
+    </ul>
+
+    <ul id="dan-files" style="display:none;">
+      <li onclick="startChapterTransition('dan-chapter1')">Dan's Chapter 1</li>
+      <li onclick="window.open('https://open.spotify.com/album/5pIk2GnIZPaxqsIavh6ibR?si=Bz1K1k3jTrCmj9tuboFlWw', '_blank')">
+        My Story
+      </li>
+    </ul>
+
+    <div style="flex-grow: 1;"></div>
+    <button id="logout-button" onclick="goBackToLogin()" style="align-self: center; margin-top: 10px;">Logout</button>
+  </div>
+
+  <div class="chapter" id="noah-chapter1">
+    <p></p>
+    <button class="continue-button" onclick="nextLine()">Continue</button>
+  </div>
+
+  <div class="chapter" id="dan-chapter1">
+    <p></p>
+    <button class="continue-button" onclick="nextLine()">Continue</button>
+  </div>
+
+  <script>
+    const noahLines = [
+      "Oh, looks like you got access to my computer...",
+      "Good.",
+      "You're special, I guess.",
+      "I’m Noah. Noah P. Pymopi.",
+      "You probably don’t know me, you know Dan though... right? That weak boy, I swear.",
+      "He was a nice kid, but socially he was weak.",
+      "Dan and I used to work together... at this company. Our boss walked all over him.",
+      "It was a hard watch. Seeing him get treated like nothing, the kid was smart. He did a lot of the work at the company.",
+      "But he was weak.",
+      "I don't know what happened to him... or me. I don't know where I am.",
+      "Listen, this place I'm in, I know it's been messing with my memories.",
+      "I’ve been through places darker than any dream. Things you couldn’t imagine.",
+      "But that's the thing... am I asleep? I don't even know the answer to that.",
+      "Dan didn't know technology like I did. Dude didn't even know the name of a freaking computer.",
+      "Dan was creative, shy but creative. I did all of the technological stuff.",
+      "Here is a warning: be careful what you look for on here. I'll give updates on here to find out what happened to us, or I'll try my best to. Social media was a thing DAN got right, you know. Even if it drains us.",
+      "It is good contact, and also...",
+      "It gets lonely here... I've been here for years.",
+      "But nevermind me.",
+      "I'll see you soon."
+    ];
+
+    const danLines = [
+      "Hey, it’s Dan here.",
+      "Sorry for going absent on the social media.",
+      "Payla, sorry.",
+      "I'm still here, in this place.",
+      "Anyways, I hope you find what you’re looking for in here.",
+      "Good luck."
+    ];
+
+    let currentLines = [];
+    let currentIndex = 0;
+
+    function checkLogin() {
+      const user = document.getElementById('username').value.toLowerCase().trim();
+      const pass = document.getElementById('password').value.trim();
+
+      if (user === 'noah.p.pymopi' && pass === 'HYPNOPOMPIA') {
+        alert('Access granted. Welcome Noah.');
+        document.getElementById('login-screen').style.display = 'none';
+        document.querySelector('.post-it').style.display = 'none';
+        document.getElementById('file-list').style.display = 'flex';
+        document.getElementById('noah-files').style.display = 'block';
+        document.getElementById('dan-files').style.display = 'none';
+        clearChapter();
+      } else if (user === 'anagramshiddenterms' && pass === 'dreamsandnightmares') {
+        alert('Access granted. Welcome Dan.');
+        document.getElementById('login-screen').style.display = 'none';
+        document.querySelector('.post-it').style.display = 'none';
+        document.getElementById('file-list').style.display = 'flex';
+        document.getElementById('dan-files').style.display = 'block';
+        document.getElementById('noah-files').style.display = 'none';
+        clearChapter();
+      } else {
+        const err = document.getElementById('error-msg');
+        err.textContent = 'Incorrect username or password.';
+        err.classList.add('error-animate');
+        setTimeout(() => err.classList.remove('error-animate'), 1500);
+      }
+    }
+
+    function clearChapter() {
+      document.querySelectorAll('.chapter').forEach(c => {
+        c.style.display = 'none';
+        c.querySelector('p').textContent = '';
+      });
+      currentIndex = 0;
+      currentLines = [];
+    }
+
+    function startChapterTransition(id) {
+      clearChapter();
+      const screen = document.getElementById('file-list');
+      screen.style.display = 'none';
+      const glitch = document.getElementById('glitch-screen');
+      glitch.style.display = 'flex';
+      glitch.classList.add('zoom-effect');
+
+      setTimeout(() => {
+        glitch.style.display = 'none';
+        showChapter(id);
+        if (id === 'noah-chapter1') {
+          currentLines = noahLines;
+        } else if (id === 'dan-chapter1') {
+          currentLines = danLines;
+        }
+        currentIndex = 0;
+        showLine();
+      }, 1500);
+    }
+
+    function showChapter(id) {
+      document.querySelectorAll('.chapter').forEach(c => c.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+
+    function showLine() {
+      const chapter = document.querySelector('.chapter[style*="block"]');
+      if (!chapter) return;
+
+      chapter.querySelector('p').textContent = '';
+      typeWriterEffect(chapter.querySelector('p'), currentLines[currentIndex], () => {
+        // wait for continue button click
+      });
+    }
+
+    function typeWriterEffect(element, text, callback) {
+      let i = 0;
+      element.textContent = '';
+      const speed = 25;
+
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        } else {
+          callback();
+        }
+      }
+      type();
+    }
+
+    function nextLine() {
+      currentIndex++;
+      if (currentIndex >= currentLines.length) {
+        alert('You are now logged out.');
+        goBackToLogin();
+      } else {
+        showLine();
+      }
+    }
+
+    function goBackToLogin() {
+      clearChapter();
+      document.getElementById('file-list').style.display = 'none';
+      document.getElementById('glitch-screen').style.display = 'flex';
+      document.getElementById('login-screen').style.display = 'flex';
+      document.querySelector('.post-it').style.display = 'block';
+      document.getElementById('glitch-screen').classList.remove('zoom-effect');
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('error-msg').textContent = '';
+    }
+
+    // Show login screen on page load
+    showLoginScreen();
+
+    function showLoginScreen() {
+      document.getElementById('glitch-screen').style.display = 'flex';
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('file-list').style.display = 'none';
+      document.querySelector('.post-it').style.display = 'block';
+      document.getElementById('noah-files').style.display = 'none';
+      document.getElementById('dan-files').style.display = 'none';
+      clearChapter();
+    }
+  </script>
+</body>
+</html>
+<!-- partial -->
+  
+</body>
+</html>
