@@ -286,6 +286,9 @@
   <li onclick="startChapter('jayson-chapter3')">Letter to my friend, Dan</li>
 </ul>
 
+     <ul id="talia-files" style="display:none;">
+      <li onclick="startChapterTransition('talia-chapter1')">To Talia,</li>
+    </ul>
 
     <div style="flex-grow: 1;"></div>
     <button id="logout-button" onclick="goBackToLogin()" style="align-self: center; margin-top: 10px;">Logout</button>
@@ -295,26 +298,17 @@
     <p></p>
     <button class="continue-button" onclick="nextLine()">Continue</button>
   </div>
+  
+  <div class="chapter" id="talia-chapter1">
+    <p></p>
+    <button class="continue-button" onclick="nextLine()">Continue</button>
+  </div>
 
   <div class="chapter" id="dan-chapter1">
     <p></p>
     <button class="continue-button" onclick="nextLine()">Continue</button>
-    
-  </div>
-  <div class="chapter" id="jayson-chapter1">
-  <p class="typewriter">[Recording] “Day 26. I dreamed of DAN again. He was in the static. I saw myself—but broken.”</p>
-  <button class="continue-button" onclick="alert('To be continued...')">Continue</button>
-</div>
-
-<div class="chapter" id="jayson-chapter2">
-  <p class="typewriter">“The sky was pink. The trees were purple. I stood on the farm, but I wasn’t really there…”</p>
-  <button class="continue-button" onclick="alert('To be continued...')">Continue</button>
-</div>
-
-<div class="chapter" id="jayson-chapter3">
-  <p class="typewriter">“DAN, if you’re hearing this—I’m sorry. I should’ve answered the screen. I should’ve…”</p>
-  <button class="continue-button" onclick="alert('To be continued...')">Continue</button>
-</div>
+     </div>
+  
 
 
   <script>
@@ -350,7 +344,17 @@
       "Anyways, I hope you find what you’re looking for in here. Maybe it can help me get out.",
       "Good luck."
     ];
-
+    const taliaLines = [
+      "Talia?",
+      "Why are you here?",
+      "Let me guess, your boyfriend gave you a user on here.",
+      "He's a sweet guy, but man, he gives in too easily.",
+      "Anyways, there isn't much on here right now.",
+      "Maybe you can... look for information on other users? If you are nosey...",
+      "Whatever, I don't care. Good luck with that.",
+      "I'm just kidding, I love you. -Jayson"
+    ];
+    
     let currentLines = [];
     let currentIndex = 0;
 
@@ -366,6 +370,7 @@
     document.getElementById('noah-files').style.display = 'block';
     document.getElementById('jayson-files').style.display = 'none';
     document.getElementById('dan-files').style.display = 'none';
+    document.getElementById('talia-files').style.display = 'none';
     clearChapter();
   } else if (user === 'anagramshiddenterms' && pass === 'dreamsandnightmares') {
     alert('Access granted. Welcome Dan.');
@@ -375,6 +380,7 @@
     document.getElementById('dan-files').style.display = 'block';
     document.getElementById('jayson-files').style.display = 'none';
     document.getElementById('noah-files').style.display = 'none';
+    document.getElementById('talia-files').style.display = 'none';
     clearChapter();
   } else if (user === 'jayson.j.gallardo' && pass === 'ABrokenMind') {
     alert('Access granted. Welcome Jayson.');
@@ -385,6 +391,18 @@
     document.getElementById('noah-files').style.display = 'none';
     document.getElementById('jayson-files').style.display = 'block';
     document.getElementById('dan-files').style.display = 'none';
+    document.getElementById('talia-files').style.display = 'none';
+    clearChapter();
+    } else if (user === 'itz_tt25' && pass === 'liajoy2007') {
+    alert('Access granted. Welcome Talia? Wait, what are you doing here?');
+    document.getElementById('login-screen').style.display = 'none';
+    document.querySelector('.post-it').style.display = 'none';
+    document.getElementById('file-list').style.display = 'flex';
+    // You can customize a new section like "jayson-files" here:
+    document.getElementById('noah-files').style.display = 'none';
+    document.getElementById('jayson-files').style.display = 'none';
+    document.getElementById('dan-files').style.display = 'none';
+    document.getElementById('talia-files').style.display = 'block';
     clearChapter();
     // Add more behavior if needed
   } else {
@@ -419,6 +437,8 @@
           currentLines = noahLines;
         } else if (id === 'dan-chapter1') {
           currentLines = danLines;
+           } else if (id === 'talia-chapter1') {
+      currentLines = taliaLines;
         }
         currentIndex = 0;
         showLine();
